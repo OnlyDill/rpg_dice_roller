@@ -42,6 +42,14 @@ class _DicePageState extends State<DicePage> {
   bool isPressed_d8_plus = false;
   bool isPressed_d10_minus = false;
   bool isPressed_d10_plus = false;
+  bool isPressed_d12_minus = false;
+  bool isPressed_d12_plus = false;
+  bool isPressed_d20_minus = false;
+  bool isPressed_d20_plus = false;
+  bool isPressed_d100_minus = false;
+  bool isPressed_d100_plus = false;
+  bool isPressed_epts_minus = false;
+  bool isPressed_epts_plus = false;
 
   void setD4() {
     if (d4Controller.text == '') {
@@ -65,7 +73,6 @@ class _DicePageState extends State<DicePage> {
     } else {
       num_d8 = int.parse(d8Controller.text).abs();
     }
-    print('d8' + num_d8.toString());
   }
 
   void setD10() {
@@ -74,7 +81,6 @@ class _DicePageState extends State<DicePage> {
     } else {
       num_d10 = int.parse(d10Controller.text).abs();
     }
-    print('d10' + num_d10.toString());
   }
 
   void setD12() {
@@ -483,19 +489,42 @@ class _DicePageState extends State<DicePage> {
                   Spacer(),
                   Row(
                     children: [
-                      IconButton(
-                        // decreases num_d8 by 1
-                        iconSize: 36.0,
-                        icon: Icon(Icons.remove),
-                        color: Colors.white,
-                        onPressed: () {
-                          setState(() {
+                      GestureDetector(
+                        child: IconButton(
+                          // decreases num_d8 by 1
+                          iconSize: 36.0,
+                          icon: Icon(Icons.remove),
+                          color: Colors.white,
+                          onPressed: () {
+                            setState(() {
+                              if (num_d8 <= min) {
+                                num_d8 = 0;
+                              } else {
+                                num_d8 -= 1;
+                              }
+                              d8Controller.text = num_d8.toString();
+                            });
+                          },
+                        ),
+                        onLongPressStart: (LongPressStartDetails details) async{
+                          isPressed_d8_minus = true;
+                          do {
                             if (num_d8 <= min) {
-                              num_d8 = 0;
+                              // prevent num_d8 from going < min
+                              num_d8 = min;
                             } else {
+                              // if num_d10 is not min, subtract 1
                               num_d8 -= 1;
                             }
-                            d8Controller.text = num_d8.toString();
+                            setState(() {
+                              d8Controller.text = num_d8.toString();
+                            });
+                            await Future.delayed(Duration(milliseconds: 150));
+                          } while (isPressed_d8_minus);
+                        },
+                        onLongPressEnd: (LongPressEndDetails details) {
+                          setState(() {
+                            isPressed_d8_minus = false;
                           });
                         },
                       ),
@@ -532,19 +561,42 @@ class _DicePageState extends State<DicePage> {
                           ),
                         ),
                       ),
-                      IconButton(
-                        // increases num_d8 by 1
-                        iconSize: 36.0,
-                        icon: Icon(Icons.add),
-                        color: Colors.white,
-                        onPressed: () {
-                          setState(() {
+                      GestureDetector(
+                        child: IconButton(
+                          // increases num_d8 by 1
+                          iconSize: 36.0,
+                          icon: Icon(Icons.add),
+                          color: Colors.white,
+                          onPressed: () {
+                            setState(() {
+                              if (num_d8 >= max) {
+                                num_d8 = 99;
+                              } else {
+                                num_d8 += 1;
+                              }
+                              d8Controller.text = num_d8.toString();
+                            });
+                          },
+                        ),
+                        onLongPressStart: (LongPressStartDetails details) async{
+                          isPressed_d8_plus = true;
+                          do {
                             if (num_d8 >= max) {
-                              num_d8 = 99;
+                              // prevent num_d8 going over max
+                              num_d8 = max;
                             } else {
+                              // if num_d10 is not at max,
                               num_d8 += 1;
                             }
-                            d8Controller.text = num_d8.toString();
+                            setState(() {
+                              d8Controller.text = num_d8.toString();
+                            });
+                            await Future.delayed(Duration(milliseconds: 150));
+                          } while (isPressed_d8_plus);
+                        },
+                        onLongPressEnd: (LongPressEndDetails details) {
+                          setState(() {
+                            isPressed_d8_plus = false;
                           });
                         },
                       ),
@@ -578,19 +630,42 @@ class _DicePageState extends State<DicePage> {
                   Spacer(),
                   Row(
                     children: [
-                      IconButton(
-                        // decreases num_d10 by 1 if num_d10 > min
-                        iconSize: 36.0,
-                        icon: Icon(Icons.remove),
-                        color: Colors.white,
-                        onPressed: () {
-                          setState(() {
+                      GestureDetector(
+                        child: IconButton(
+                          // decreases num_d10 by 1
+                          iconSize: 36.0,
+                          icon: Icon(Icons.remove),
+                          color: Colors.white,
+                          onPressed: () {
+                            setState(() {
+                              if (num_d10 <= min) {
+                                num_d10 = 0;
+                              } else {
+                                num_d10 -= 1;
+                              }
+                              d10Controller.text = num_d10.toString();
+                            });
+                          },
+                        ),
+                        onLongPressStart: (LongPressStartDetails details) async{
+                          isPressed_d10_minus = true;
+                          do {
                             if (num_d10 <= min) {
+                              // prevent num_d10 from going < min
                               num_d10 = min;
                             } else {
+                              // if num_d10 is not min, subtract 1
                               num_d10 -= 1;
                             }
-                            d10Controller.text = num_d10.toString();
+                            setState(() {
+                              d10Controller.text = num_d10.toString();
+                            });
+                            await Future.delayed(Duration(milliseconds: 150));
+                          } while (isPressed_d10_minus);
+                        },
+                        onLongPressEnd: (LongPressEndDetails details) {
+                          setState(() {
+                            isPressed_d10_minus = false;
                           });
                         },
                       ),
@@ -627,19 +702,42 @@ class _DicePageState extends State<DicePage> {
                           ),
                         ),
                       ),
-                      IconButton(
-                        // increases num_d10 by 1 if num_d10 < max
-                        iconSize: 36.0,
-                        icon: Icon(Icons.add),
-                        color: Colors.white,
-                        onPressed: () {
-                          setState(() {
+                      GestureDetector(
+                        child: IconButton(
+                          // increases num_d10 by 1
+                          iconSize: 36.0,
+                          icon: Icon(Icons.add),
+                          color: Colors.white,
+                          onPressed: () {
+                            setState(() {
+                              if (num_d10 >= max) {
+                                num_d10 = 99;
+                              } else {
+                                num_d10 += 1;
+                              }
+                              d10Controller.text = num_d10.toString();
+                            });
+                          },
+                        ),
+                        onLongPressStart: (LongPressStartDetails details) async{
+                          isPressed_d10_plus = true;
+                          do {
                             if (num_d10 >= max) {
+                              // prevent num_d10 going over max
                               num_d10 = max;
                             } else {
+                              // if num_d10 is not at max,
                               num_d10 += 1;
                             }
-                            d10Controller.text = num_d10.toString();
+                            setState(() {
+                              d10Controller.text = num_d10.toString();
+                            });
+                            await Future.delayed(Duration(milliseconds: 150));
+                          } while (isPressed_d10_plus);
+                        },
+                        onLongPressEnd: (LongPressEndDetails details) {
+                          setState(() {
+                            isPressed_d10_plus = false;
                           });
                         },
                       ),
@@ -673,19 +771,42 @@ class _DicePageState extends State<DicePage> {
                   Spacer(),
                   Row(
                     children: [
-                      IconButton(
-                        // decreases num_d12 by 1
-                        iconSize: 36.0,
-                        icon: Icon(Icons.remove),
-                        color: Colors.white,
-                        onPressed: () {
-                          setState(() {
+                      GestureDetector(
+                        child: IconButton(
+                          // decreases num_d12 by 1
+                          iconSize: 36.0,
+                          icon: Icon(Icons.remove),
+                          color: Colors.white,
+                          onPressed: () {
+                            setState(() {
+                              if (num_d12 <= min) {
+                                num_d12 = 0;
+                              } else {
+                                num_d12 -= 1;
+                              }
+                              d12Controller.text = num_d12.toString();
+                            });
+                          },
+                        ),
+                        onLongPressStart: (LongPressStartDetails details) async{
+                          isPressed_d12_minus = true;
+                          do {
                             if (num_d12 <= min) {
+                              // prevent num_d12 from going < min
                               num_d12 = min;
                             } else {
+                              // if num_d12 is not min, subtract 1
                               num_d12 -= 1;
                             }
-                            d12Controller.text = num_d12.toString();
+                            setState(() {
+                              d12Controller.text = num_d12.toString();
+                            });
+                            await Future.delayed(Duration(milliseconds: 150));
+                          } while (isPressed_d12_minus);
+                        },
+                        onLongPressEnd: (LongPressEndDetails details) {
+                          setState(() {
+                            isPressed_d12_minus = false;
                           });
                         },
                       ),
@@ -722,19 +843,42 @@ class _DicePageState extends State<DicePage> {
                           ),
                         ),
                       ),
-                      IconButton(
-                        // increases num_d12 by 1
-                        iconSize: 36.0,
-                        icon: Icon(Icons.add),
-                        color: Colors.white,
-                        onPressed: () {
-                          setState(() {
+                      GestureDetector(
+                        child: IconButton(
+                          // increases num_d12 by 1
+                          iconSize: 36.0,
+                          icon: Icon(Icons.add),
+                          color: Colors.white,
+                          onPressed: () {
+                            setState(() {
+                              if (num_d12 >= max) {
+                                num_d12 = 99;
+                              } else {
+                                num_d12 += 1;
+                              }
+                              d12Controller.text = num_d12.toString();
+                            });
+                          },
+                        ),
+                        onLongPressStart: (LongPressStartDetails details) async{
+                          isPressed_d12_plus = true;
+                          do {
                             if (num_d12 >= max) {
+                              // prevent num_d12 going over max
                               num_d12 = max;
                             } else {
+                              // if num_d12 is not at max,
                               num_d12 += 1;
                             }
-                            d12Controller.text = num_d12.toString();
+                            setState(() {
+                              d12Controller.text = num_d12.toString();
+                            });
+                            await Future.delayed(Duration(milliseconds: 150));
+                          } while (isPressed_d12_plus);
+                        },
+                        onLongPressEnd: (LongPressEndDetails details) {
+                          setState(() {
+                            isPressed_d12_plus = false;
                           });
                         },
                       ),
@@ -768,19 +912,42 @@ class _DicePageState extends State<DicePage> {
                   Spacer(),
                   Row(
                     children: [
-                      IconButton(
-                        // decreases num_d20 by 1
-                        iconSize: 36.0,
-                        icon: Icon(Icons.remove),
-                        color: Colors.white,
-                        onPressed: () {
-                          setState(() {
+                      GestureDetector(
+                        child: IconButton(
+                          // decreases num_d20 by 1
+                          iconSize: 36.0,
+                          icon: Icon(Icons.remove),
+                          color: Colors.white,
+                          onPressed: () {
+                            setState(() {
+                              if (num_d20 <= min) {
+                                num_d20 = 0;
+                              } else {
+                                num_d20 -= 1;
+                              }
+                              d20Controller.text = num_d20.toString();
+                            });
+                          },
+                        ),
+                        onLongPressStart: (LongPressStartDetails details) async{
+                          isPressed_d20_minus = true;
+                          do {
                             if (num_d20 <= min) {
+                              // prevent num_d20 from going < min
                               num_d20 = min;
                             } else {
+                              // if num_d20 is not min, subtract 1
                               num_d20 -= 1;
                             }
-                            d20Controller.text = num_d20.toString();
+                            setState(() {
+                              d20Controller.text = num_d20.toString();
+                            });
+                            await Future.delayed(Duration(milliseconds: 150));
+                          } while (isPressed_d20_minus);
+                        },
+                        onLongPressEnd: (LongPressEndDetails details) {
+                          setState(() {
+                            isPressed_d20_minus = false;
                           });
                         },
                       ),
@@ -817,19 +984,42 @@ class _DicePageState extends State<DicePage> {
                           ),
                         ),
                       ),
-                      IconButton(
-                        // increases num_d20 by 1
-                        iconSize: 36.0,
-                        icon: Icon(Icons.add),
-                        color: Colors.white,
-                        onPressed: () {
-                          setState(() {
+                      GestureDetector(
+                        child: IconButton(
+                          // increases num_d20 by 1
+                          iconSize: 36.0,
+                          icon: Icon(Icons.add),
+                          color: Colors.white,
+                          onPressed: () {
+                            setState(() {
+                              if (num_d20 >= max) {
+                                num_d20 = 99;
+                              } else {
+                                num_d20 += 1;
+                              }
+                              d20Controller.text = num_d20.toString();
+                            });
+                          },
+                        ),
+                        onLongPressStart: (LongPressStartDetails details) async{
+                          isPressed_d20_plus = true;
+                          do {
                             if (num_d20 >= max) {
+                              // prevent num_d20 going over max
                               num_d20 = max;
                             } else {
+                              // if num_d20 is not at max,
                               num_d20 += 1;
                             }
-                            d20Controller.text = num_d20.toString();
+                            setState(() {
+                              d20Controller.text = num_d20.toString();
+                            });
+                            await Future.delayed(Duration(milliseconds: 150));
+                          } while (isPressed_d20_plus);
+                        },
+                        onLongPressEnd: (LongPressEndDetails details) {
+                          setState(() {
+                            isPressed_d20_plus = false;
                           });
                         },
                       ),
@@ -863,19 +1053,42 @@ class _DicePageState extends State<DicePage> {
                   Spacer(),
                   Row(
                     children: [
-                      IconButton(
-                        // decreases num_d100 by 1 if num_d100 < min
-                        iconSize: 36.0,
-                        icon: Icon(Icons.remove),
-                        color: Colors.white,
-                        onPressed: () {
-                          setState(() {
+                      GestureDetector(
+                        child: IconButton(
+                          // decreases num_d100 by 1
+                          iconSize: 36.0,
+                          icon: Icon(Icons.remove),
+                          color: Colors.white,
+                          onPressed: () {
+                            setState(() {
+                              if (num_d100 <= min) {
+                                num_d100 = 0;
+                              } else {
+                                num_d100 -= 1;
+                              }
+                              d100Controller.text = num_d100.toString();
+                            });
+                          },
+                        ),
+                        onLongPressStart: (LongPressStartDetails details) async{
+                          isPressed_d100_minus = true;
+                          do {
                             if (num_d100 <= min) {
+                              // prevent num_d100 from going < min
                               num_d100 = min;
                             } else {
+                              // if num_d100 is not min, subtract 1
                               num_d100 -= 1;
                             }
-                            d100Controller.text = num_d100.toString();
+                            setState(() {
+                              d100Controller.text = num_d100.toString();
+                            });
+                            await Future.delayed(Duration(milliseconds: 150));
+                          } while (isPressed_d100_minus);
+                        },
+                        onLongPressEnd: (LongPressEndDetails details) {
+                          setState(() {
+                            isPressed_d100_minus = false;
                           });
                         },
                       ),
@@ -912,19 +1125,42 @@ class _DicePageState extends State<DicePage> {
                           ),
                         ),
                       ),
-                      IconButton(
-                        // increases num_d100 by 1 if num_d100 < max
-                        iconSize: 36.0,
-                        icon: Icon(Icons.add),
-                        color: Colors.white,
-                        onPressed: () {
-                          setState(() {
+                      GestureDetector(
+                        child: IconButton(
+                          // increases num_d100 by 1
+                          iconSize: 36.0,
+                          icon: Icon(Icons.add),
+                          color: Colors.white,
+                          onPressed: () {
+                            setState(() {
+                              if (num_d100 >= max) {
+                                num_d100 = 99;
+                              } else {
+                                num_d100 += 1;
+                              }
+                              d100Controller.text = num_d100.toString();
+                            });
+                          },
+                        ),
+                        onLongPressStart: (LongPressStartDetails details) async{
+                          isPressed_d100_plus = true;
+                          do {
                             if (num_d100 >= max) {
+                              // prevent num_d100 going over max
                               num_d100 = max;
                             } else {
+                              // if num_d100 is not at max,
                               num_d100 += 1;
                             }
-                            d100Controller.text = num_d100.toString();
+                            setState(() {
+                              d100Controller.text = num_d100.toString();
+                            });
+                            await Future.delayed(Duration(milliseconds: 150));
+                          } while (isPressed_d100_plus);
+                        },
+                        onLongPressEnd: (LongPressEndDetails details) {
+                          setState(() {
+                            isPressed_d100_plus = false;
                           });
                         },
                       ),
@@ -958,19 +1194,42 @@ class _DicePageState extends State<DicePage> {
                   Spacer(),
                   Row(
                     children: [
-                      IconButton(
-                        // decreases num_epts by 1 if num_epts > min
-                        iconSize: 36.0,
-                        icon: Icon(Icons.remove),
-                        color: Colors.white,
-                        onPressed: () {
-                          setState(() {
+                      GestureDetector(
+                        child: IconButton(
+                          // decreases num_epts by 1
+                          iconSize: 36.0,
+                          icon: Icon(Icons.remove),
+                          color: Colors.white,
+                          onPressed: () {
+                            setState(() {
+                              if (num_epts <= min) {
+                                num_epts = 0;
+                              } else {
+                                num_epts -= 1;
+                              }
+                              eptsController.text = num_epts.toString();
+                            });
+                          },
+                        ),
+                        onLongPressStart: (LongPressStartDetails details) async{
+                          isPressed_epts_minus = true;
+                          do {
                             if (num_epts <= min) {
+                              // prevent num_epts from going < min
                               num_epts = min;
                             } else {
+                              // if num_epts is not min, subtract 1
                               num_epts -= 1;
                             }
-                            eptsController.text = num_epts.toString();
+                            setState(() {
+                              eptsController.text = num_epts.toString();
+                            });
+                            await Future.delayed(Duration(milliseconds: 150));
+                          } while (isPressed_epts_minus);
+                        },
+                        onLongPressEnd: (LongPressEndDetails details) {
+                          setState(() {
+                            isPressed_epts_minus = false;
                           });
                         },
                       ),
@@ -1007,19 +1266,42 @@ class _DicePageState extends State<DicePage> {
                           ),
                         ),
                       ),
-                      IconButton(
-                        // increases num_epts by 1 if num_epts < max
-                        iconSize: 36.0,
-                        icon: Icon(Icons.add),
-                        color: Colors.white,
-                        onPressed: () {
-                          setState(() {
+                      GestureDetector(
+                        child: IconButton(
+                          // increases num_epts by 1
+                          iconSize: 36.0,
+                          icon: Icon(Icons.add),
+                          color: Colors.white,
+                          onPressed: () {
+                            setState(() {
+                              if (num_epts >= max) {
+                                num_epts = 99;
+                              } else {
+                                num_epts += 1;
+                              }
+                              eptsController.text = num_epts.toString();
+                            });
+                          },
+                        ),
+                        onLongPressStart: (LongPressStartDetails details) async{
+                          isPressed_epts_plus = true;
+                          do {
                             if (num_epts >= max) {
+                              // prevent num_epts going over max
                               num_epts = max;
                             } else {
+                              // if num_epts is not at max,
                               num_epts += 1;
                             }
-                            eptsController.text = num_epts.toString();
+                            setState(() {
+                              eptsController.text = num_epts.toString();
+                            });
+                            await Future.delayed(Duration(milliseconds: 150));
+                          } while (isPressed_epts_plus);
+                        },
+                        onLongPressEnd: (LongPressEndDetails details) {
+                          setState(() {
+                            isPressed_epts_plus = false;
                           });
                         },
                       ),
